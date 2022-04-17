@@ -3,6 +3,8 @@
 ###### Starting Tier
 - Track a highscore that persists across scenes and display it in the UI (5)
 
+- Implement the speed increase that happens after 30 seconds in the original game (5)
+
 ###### Novice Tier
 
 ###### Intermediate Tier
