@@ -52,6 +52,9 @@ class Play extends Phaser.Scene {
             },
             fixedWidth: 100
         }
+
+
+
         this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
         scoreConfig.fixedWidth = 0;
         this.add.text(borderUISize + borderPadding +128, borderUISize + borderPadding*2, 'Highscore:' + highscore, scoreConfig);
@@ -61,16 +64,21 @@ class Play extends Phaser.Scene {
         //GAME OVER Flag
         this.gameOver = false;
         //60 sec clock
-        scoreConfig.fixedWidth = 0;
+        
         this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
+            scoreConfig.fixedWidth = 0;
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press(R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
             if(highscore < this.p1Score) highscore =  this.p1Score
             this.add.text(game.config.width/2, game.config.height/2 + 128, 'Highscore:' + highscore, scoreConfig).setOrigin(0.5);
             this.gameOver = true;
         }, null, this);
+        scoreConfig.fixedWidth = 100;
+        this.timeRemaining = this.add.text(borderUISize + borderPadding +448, borderUISize + borderPadding*2, Math.floor(this.clock.getRemainingSeconds()), scoreConfig);
+       
 
-        this.clock = this.time.delayedCall(30000, () => {
+
+        this.speedup = this.time.delayedCall(30000, () => {
             this.ship01.updatespeed(2);
             this.ship02.updatespeed(2);
             this.ship03.updatespeed(2)
@@ -83,12 +91,14 @@ class Play extends Phaser.Scene {
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.scene.start("menuScene");
         }
+        
         this.Background.tilePositionX -=4;
         if(!this.gameOver){
             this.p1Rocket.update();
             this.ship01.update();
             this.ship02.update();
             this.ship03.update();
+            this.updateTime();
         }
         // check collisions
         if(this.checkCollision(this.p1Rocket, this.ship03)){
@@ -131,5 +141,9 @@ class Play extends Phaser.Scene {
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;
         this.sound.play('sfx_explosion');
+    }
+
+    updateTime(){
+        this.timeRemaining.text = Math.floor(this.clock.getRemainingSeconds());
     }
 }

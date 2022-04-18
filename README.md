@@ -6,6 +6,7 @@
 - Implement the speed increase that happens after 30 seconds in the original game (5)
 
 ###### Novice Tier
+- Display the time remaining (in seconds) on the screen (10)
 
 ###### Intermediate Tier
 
