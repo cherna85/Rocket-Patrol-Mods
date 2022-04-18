@@ -9,6 +9,7 @@
 - Display the time remaining (in seconds) on the screen (10)
 
 ###### Intermediate Tier
+- Implement an alternating two-player mode (20)
 
 ###### S(hrek) Tier
 - Redesign the game's artwork, UI, and sound to change its 

@@ -64,15 +64,48 @@ class Play extends Phaser.Scene {
         //GAME OVER Flag
         this.gameOver = false;
         //60 sec clock
-        
-        this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
-            scoreConfig.fixedWidth = 0;
-            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press(R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
-            if(highscore < this.p1Score) highscore =  this.p1Score
-            this.add.text(game.config.width/2, game.config.height/2 + 128, 'Highscore:' + highscore, scoreConfig).setOrigin(0.5);
-            this.gameOver = true;
-        }, null, this);
+        if(game.settings.players == 1){
+            this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
+                scoreConfig.fixedWidth = 0;
+                this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
+                this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press(R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
+                if(highscore < this.p1Score) highscore =  this.p1Score
+                this.add.text(game.config.width/2, game.config.height/2 + 128, 'Highscore: ' + highscore, scoreConfig).setOrigin(0.5);
+                this.gameOver = true;
+            }, null, this);
+        }
+        if(game.settings.players == 2 && game.settings.currentPlayer == 1){
+            this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
+                scoreConfig.fixedWidth = 0;
+                this.add.text(game.config.width/2, game.config.height/2, 'PLAYER 1 GAME OVER', scoreConfig).setOrigin(0.5);
+                this.add.text(game.config.width/2, game.config.height/2 + 64, 'Player 2 Press (R) to Start ', scoreConfig).setOrigin(0.5);
+                this.add.text(game.config.width/2, game.config.height/2 + 128, 'or ← to Exit game', scoreConfig).setOrigin(0.5);
+                if(highscore < this.p1Score) highscore =  this.p1Score;
+                this.add.text(game.config.width/2, game.config.height/2 + 192, 'Highscore: ' + highscore, scoreConfig).setOrigin(0.5);
+                game.settings.currentPlayer = 2; 
+                game.settings.prevScore = this.p1Score;
+                this.gameOver = true;
+            }, null, this);
+        }
+
+        if(game.settings.players == 2 && game.settings.currentPlayer == 2){
+            this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
+                scoreConfig.fixedWidth = 0;
+                this.add.text(game.config.width/2, game.config.height/2, 'PLAYER 2 GAME OVER', scoreConfig).setOrigin(0.5);
+                if(this.p1Score > game.settings.prevScore){
+                    this.add.text(game.config.width/2, game.config.height/2 +64, 'PLAYER 2 WINS', scoreConfig).setOrigin(0.5);
+                }else{
+                    this.add.text(game.config.width/2, game.config.height/2+ 64, 'PLAYER 1 Wins', scoreConfig).setOrigin(0.5);
+                }
+                this.add.text(game.config.width/2, game.config.height/2+ 128, 'SCORES Player 1: '+ game.settings.prevScore+" Player 2: " +this.p1Score, scoreConfig).setOrigin(0.5);                
+
+                this.add.text(game.config.width/2, game.config.height/2 + 192, 'Press ← to Exit game', scoreConfig).setOrigin(0.5);
+                if(highscore < this.p1Score) highscore =  this.p1Score;
+                this.add.text(game.config.width/2, game.config.height/2 + 256, 'Highscore: ' + highscore, scoreConfig).setOrigin(0.5);
+                game.settings.currentPlayer = 3; 
+                this.gameOver = true;
+            }, null, this);
+        }
         scoreConfig.fixedWidth = 100;
         this.timeRemaining = this.add.text(borderUISize + borderPadding +448, borderUISize + borderPadding*2, Math.floor(this.clock.getRemainingSeconds()), scoreConfig);
        
@@ -86,7 +119,10 @@ class Play extends Phaser.Scene {
     }
     update() { 
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)){
-            this.scene.restart();
+            if(game.settings.currentPlayer != 3){
+                this.scene.restart();
+            }
+            
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.scene.start("menuScene");
