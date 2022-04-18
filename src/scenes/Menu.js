@@ -63,7 +63,6 @@ class Menu extends Phaser.Scene {
         //Two Players
         if (Phaser.Input.Keyboard.JustDown(keyUP)) {
           // easy mode
-          console.log("two players chief")
           game.settings = {
             spaceshipSpeed: 3,
             gameTimer: 60000, 
@@ -76,7 +75,6 @@ class Menu extends Phaser.Scene {
         }
         if (Phaser.Input.Keyboard.JustDown(keyDOWN)) {
           // hard mode
-          console.log("two players chief")
           game.settings = {
             spaceshipSpeed: 4,
             gameTimer: 45000,
